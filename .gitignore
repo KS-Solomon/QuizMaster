@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Data - only example.json is tracked
+data/*.json
+!data/example.json
+
+# IDE / Editor
+.claude/
+.code-review-graph/
+AGENTS.md
+CLAUDE.md
