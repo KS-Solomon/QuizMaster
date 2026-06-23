@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuizMaster - 刷题大师</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] },
+          animation: {
+            'fade-in': 'fadeIn 0.3s ease-out',
+            'slide-up': 'slideUp 0.3s ease-out',
+            'slide-down': 'slideDown 0.2s ease-out',
+            'scale-in': 'scaleIn 0.2s ease-out',
+            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            slideDown: { '0%': { opacity: '0', transform: 'translateY(-6px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+            pulseSoft: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0.7' } },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #0f0b1e;
+      --bg-secondary: #1a1433;
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-highlight: rgba(255, 255, 255, 0.15);
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --accent-indigo: #818cf8;
+      --accent-cyan: #22d3ee;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --glow-indigo: rgba(99, 102, 241, 0.4);
+      --glow-cyan: rgba(34, 211, 238, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      scroll-behavior: smooth;
+      background: linear-gradient(135deg, #0f0b1e 0%, #1a1040 50%, #0d1929 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card-glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-glass-darker {
+      background: rgba(15, 11, 30, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+    }
+
+    .option-card {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .option-card:hover {
+      border-color: rgba(129, 140, 248, 0.4);
+      background: rgba(129, 140, 248, 0.08);
+      box-shadow: 0 0 20px rgba(129, 140, 248, 0.1);
+    }
+
+    .option-card.selected {
+      border-color: var(--accent-indigo);
+      background: rgba(129, 140, 248, 0.15);
+      box-shadow: 0 0 0 1px var(--accent-indigo), 0 0 20px var(--glow-indigo);
+    }
+
+    .option-card.correct {
+      border-color: var(--accent-emerald);
+      background: rgba(52, 211, 153, 0.12);
+      box-shadow: 0 0 0 1px var(--accent-emerald), 0 0 20px rgba(52, 211, 153, 0.3);
+    }
+
+    .option-card.wrong {
+      border-color: var(--accent-rose);
+      background: rgba(251, 113, 133, 0.12);
+      box-shadow: 0 0 0 1px var(--accent-rose), 0 0 20px rgba(251, 113, 133, 0.3);
+    }
+
+    .option-card input[type="radio"],
+    .option-card input[type="checkbox"] {
+      accent-color: var(--accent-indigo);
+    }
+
+    .progress-bar {
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 15px var(--glow-indigo), 0 0 30px var(--glow-cyan);
+    }
+
+    .modal-backdrop {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .jump-btn {
+      transition: all 0.15s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    .jump-btn:hover {
+      transform: scale(1.1);
+      background: rgba(129, 140, 248, 0.15);
+      border-color: var(--accent-indigo);
+    }
+
+    .badge-type {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .stat-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-card .stat-icon {
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    .btn-primary {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: -1;
+      border-radius: inherit;
+    }
+
+    .btn-primary:hover::before {
+      opacity: 0.15;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .nav-btn {
+      transition: all 0.15s ease;
+      color: var(--text-secondary);
+    }
+
+    .nav-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .fill-input {
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+    }
+
+    .fill-input:focus {
+      border-color: var(--accent-indigo);
+      box-shadow: 0 0 0 3px var(--glow-indigo);
+    }
+
+    .fill-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    /* 深色模式输入框通用样式 */
+    select, textarea, input[type="text"] {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+    }
+
+    select:focus, textarea:focus, input[type="text"]:focus {
+      border-color: var(--accent-indigo);
+      box-shadow: 0 0 0 3px var(--glow-indigo);
+    }
+
+    select option {
+      background: #1a1433;
+      color: var(--text-primary);
+    }
+
+    /* 发光按钮样式 */
+    .glow-btn {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.2), rgba(34, 211, 238, 0.2));
+      border: 1px solid rgba(129, 140, 248, 0.4);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .glow-btn:hover {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.3), rgba(34, 211, 238, 0.3));
+      box-shadow: 0 0 25px var(--glow-indigo), 0 0 50px var(--glow-cyan);
+      transform: translateY(-1px);
+    }
+
+    /* 激活状态按钮 */
+    .glow-btn-active {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+      border: 1px solid transparent;
+      box-shadow: 0 0 20px var(--glow-indigo);
+    }
+
+    /* 标签页样式 */
+    .tab-active {
+      color: var(--accent-indigo) !important;
+      border-color: var(--accent-indigo) !important;
+    }
+
+    /* 分割线 */
+    .divider-glass {
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* 跳题按钮激活状态 */
+    .jump-btn-active {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan)) !important;
+      border-color: transparent !important;
+      color: white !important;
+      box-shadow: 0 0 15px var(--glow-indigo);
+    }
+
+    .jump-btn-correct {
+      background: rgba(52, 211, 153, 0.2) !important;
+      border-color: var(--accent-emerald) !important;
+      color: var(--accent-emerald) !important;
+    }
+
+    .jump-btn-wrong {
+      background: rgba(251, 113, 133, 0.2) !important;
+      border-color: var(--accent-rose) !important;
+      color: var(--accent-rose) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+  <div id="app" class="flex-1 w-full max-w-4xl mx-auto px-4 py-5 md:py-8">
+    <div class="flex gap-4 md:gap-6">
+      <aside id="jumpSidebar" class="hidden w-40 lg:w-48 shrink-0 card-glass rounded-xl p-4 h-fit sticky top-6 animate-fade-in">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-slate-200 text-sm">题目列表</h3>
+          <button id="closeJumpBtn" class="text-slate-400 hover:text-slate-200 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="jumpGrid" class="grid grid-cols-5 gap-1.5"></div>
+      </aside>
+      <div class="flex-1 min-w-0 space-y-4 md:space-y-5">
+        <header class="card-glass rounded-2xl p-4 md:p-5 animate-fade-in">
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              </div>
+              <div>
+                <h1 class="text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">QuizMaster</h1>
+                <p class="text-xs text-slate-500 font-medium">刷题大师</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+              <div class="flex items-center gap-2 relative">
+                <label class="text-xs text-slate-400 font-medium hidden sm:inline">题库</label>
+                <button id="libraryToggleBtn" class="card-glass-darker rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 min-w-[130px] flex items-center justify-between gap-2 transition hover:border-indigo-400"><span id="selectedLibraryText" class="truncate">请选择</span><svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                <div id="libraryDropdown" class="hidden absolute card-glass-darker rounded-xl shadow-xl p-2 z-50 w-64 max-h-60 overflow-y-auto top-full mt-1 animate-scale-in">
+                  <div id="libraryCheckboxes" class="space-y-1"></div>
+                  <div class="border-t divider-glass mt-2 pt-2 flex gap-2">
+                    <button id="selectAllLibrariesBtn" class="text-xs font-medium text-indigo-400 hover:text-indigo-300 px-2 py-1 rounded hover:bg-indigo-500/10 transition">全选</button>
+                    <button id="clearAllLibrariesBtn" class="text-xs font-medium text-slate-400 hover:text-slate-300 px-2 py-1 rounded hover:bg-white/5 transition">清空</button>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 bg-white/5 rounded-lg p-0.5 border border-white/10">
+                <label class="flex items-center gap-1 px-2 py-1 cursor-pointer rounded-md transition has-[:checked]:bg-white/10 has-[:checked]:shadow-sm"><input type="radio" name="quizMode" value="sequential" checked class="sr-only peer"><svg class="w-3.5 h-3.5 text-slate-400 peer-checked:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span class="text-xs font-medium text-slate-400 peer-checked:text-indigo-300">顺序</span></label>
+                <label class="flex items-center gap-1 px-2 py-1 cursor-pointer rounded-md transition has-[:checked]:bg-white/10 has-[:checked]:shadow-sm"><input type="radio" name="quizMode" value="random" class="sr-only peer"><svg class="w-3.5 h-3.5 text-slate-400 peer-checked:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span class="text-xs font-medium text-slate-400 peer-checked:text-indigo-300">随机</span></label>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button id="startQuizBtn" class="btn-primary glow-btn inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>开始刷题</button>
+                <button id="addQuestionBtn" class="btn-primary inline-flex items-center gap-1.5 bg-white/5 hover:bg-white/10 text-slate-200 px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 hover:border-white/20 transition"><svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>录入</button>
+                <button id="toggleJumpBtn" class="btn-primary inline-flex items-center gap-1 bg-white/5 hover:bg-white/10 text-slate-400 px-2.5 py-1.5 rounded-lg text-sm border border-white/10 hover:border-white/20 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/></svg><span class="hidden sm:inline text-xs">题目</span></button>
+              </div>
+            </div>
+          </div>
+          <div id="stats" class="mt-4 pt-4 divider-glass border-t">
+            <div class="grid grid-cols-4 gap-2 md:gap-4">
+              <div class="stat-card rounded-xl px-3 py-2.5 md:px-4 md:py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center shrink-0 stat-icon text-indigo-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                  <div class="min-w-0"><p class="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-wider">进度</p><p id="progress" class="text-sm md:text-base font-bold text-slate-200">0/0</p></div>
+                </div>
+              </div>
+              <div class="stat-card rounded-xl px-3 py-2.5 md:px-4 md:py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 stat-icon text-emerald-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                  <div class="min-w-0"><p class="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-wider">正确</p><p id="correct" class="text-sm md:text-base font-bold text-emerald-400">0</p></div>
+                </div>
+              </div>
+              <div class="stat-card rounded-xl px-3 py-2.5 md:px-4 md:py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center shrink-0 stat-icon text-rose-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                  <div class="min-w-0"><p class="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-wider">错误</p><p id="wrong" class="text-sm md:text-base font-bold text-rose-400">0</p></div>
+                </div>
+              </div>
+              <div class="stat-card rounded-xl px-3 py-2.5 md:px-4 md:py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center shrink-0 stat-icon text-cyan-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+                  <div class="min-w-0"><p class="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-wider">正确率</p><p id="accuracy" class="text-sm md:text-base font-bold text-cyan-400">0%</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full" style="width:0%"></div></div>
+          </div>
+        </header>
+        <div id="loadingState" class="card-glass rounded-2xl p-12 text-center animate-fade-in">
+          <div class="w-16 h-16 mx-auto mb-4 bg-indigo-500/20 rounded-2xl flex items-center justify-center animate-pulse-soft"><svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
+          <p class="text-slate-300 font-medium">选择题库后点击"开始刷题"</p>
+          <p class="text-xs text-slate-500 mt-1">支持单选、多选、判断、填空四种题型</p>
+        </div>
+        <div id="quizState" class="hidden space-y-4">
+          <div class="card-glass rounded-2xl p-5 md:p-6 animate-fade-in">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-500 text-white text-xs font-bold flex items-center justify-center shadow-lg shadow-indigo-500/30" id="currentNum">1</span><span id="typeBadge" class="badge-type bg-indigo-500/20 text-indigo-300">单选</span></div>
+              <div class="flex items-center gap-1">
+                <button id="editQuestionBtn" class="nav-btn p-1.5 rounded-lg hover:text-indigo-400 hover:bg-indigo-500/10 transition" title="编辑题目"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                <button id="deleteQuestionBtn" class="nav-btn p-1.5 rounded-lg hover:text-rose-400 hover:bg-rose-500/10 transition" title="删除题目"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+              </div>
+            </div>
+            <div class="mb-5"><div class="flex gap-3"><div class="hidden sm:block w-1 shrink-0 rounded-full bg-gradient-to-b from-indigo-400 to-cyan-400 opacity-60"></div><p id="questionContent" class="text-base md:text-lg text-slate-200 leading-relaxed font-medium"></p></div></div>
+            <div id="optionsArea" class="space-y-2 mb-5"></div>
+            <div id="resultArea" class="hidden mb-5 p-4 rounded-xl border animate-slide-up"></div>
+            <div class="flex items-center justify-between pt-3 divider-glass border-t">
+              <button id="prevBtn" class="nav-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium disabled:opacity-30 disabled:cursor-not-allowed"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>上一题</button>
+              <div class="flex items-center gap-2">
+                <button id="resetBtn" class="nav-btn p-2 rounded-lg hover:text-amber-400 hover:bg-amber-500/10 transition" title="重置"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+                <button id="submitBtn" class="btn-primary glow-btn inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold">提交答案</button>
+                <button id="nextBtn" class="btn-primary inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-medium transition bg-white/5 text-slate-200 border border-white/10 hover:bg-white/10 hover:border-white/20">下一题<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="modalOverlay" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 md:pt-16 modal-backdrop bg-black/50 animate-fade-in">
+    <div class="card-glass-darker rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto animate-slide-up">
+      <div class="flex items-center justify-between p-4 md:p-5 divider-glass border-b"><h3 id="modalTitle" class="text-lg font-bold text-slate-200">录入题目</h3><button id="closeModalBtn" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+      <div class="flex divider-glass border-b px-4 md:px-5"><button id="tabManual" class="px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400 transition">手动录入</button><button id="tabUpload" class="px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition">批量导入</button></div>
+      <div class="p-4 md:p-5 space-y-4">
+        <div id="formManual" class="space-y-4">
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">目标题库</label><select id="targetLibrary" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition"></select></div>
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">题型</label><select id="questionType" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition"><option value="single">单选题</option><option value="multiple">多选题</option><option value="judge">判断题</option><option value="fill">填空题</option><option value="cloze">完形填空</option></select></div>
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">题目内容</label><textarea id="questionContentInput" rows="3" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition resize-none" placeholder="请输入题目内容..."></textarea></div>
+          <div id="optionsSection"><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">选项（每行一个）</label><textarea id="optionsInput" rows="4" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition" placeholder="选项A&#10;选项B&#10;选项C&#10;选项D"></textarea></div>
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">答案</label>
+            <div id="answerSection">
+              <select id="answerSingle" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
+              <input id="answerFill" type="text" class="hidden fill-input w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition" placeholder="多个答案用逗号分隔">
+              <div id="answerMultiple" class="hidden space-y-2"></div>
+              <input id="answerCloze" type="text" class="hidden fill-input w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition" placeholder="按空格顺序输入对应选项字母，如: B A C D">
+            </div>
+          </div>
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">解析（可选）</label><textarea id="explanationInput" rows="2" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition resize-none" placeholder="输入解析内容..."></textarea></div>
+          <button id="saveQuestionBtn" class="w-full glow-btn py-2.5 rounded-lg text-sm font-semibold transition btn-primary">保存题目</button>
+        </div>
+        <div id="formUpload" class="hidden space-y-4">
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">目标题库</label><select id="targetLibraryUpload" class="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition"></select></div>
+          <div><label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">上传 JSON 文件</label>
+            <div class="relative border-2 border-dashed border-white/15 rounded-xl p-6 text-center hover:border-indigo-400 transition cursor-pointer bg-white/5" id="uploadDropzone">
+              <input id="jsonFileInput" type="file" accept=".json" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+              <svg class="w-8 h-8 mx-auto mb-2 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              <p class="text-sm text-slate-400 pointer-events-none">点击选择 JSON 文件</p>
+              <p class="text-xs text-slate-500 mt-0.5 pointer-events-none">或拖拽文件到此处</p>
+            </div>
+          </div>
+          <div id="previewArea" class="hidden p-4 bg-white/5 rounded-xl max-h-60 overflow-y-auto text-sm text-slate-300 border border-white/10"></div>
+          <button id="importBtn" class="hidden w-full glow-btn py-2.5 rounded-lg text-sm font-semibold transition btn-primary">导入题目</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="deleteModalOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop bg-black/50 animate-fade-in">
+    <div class="card-glass-darker rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-scale-in">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0"><svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg></div>
+        <div><h3 class="text-lg font-bold text-slate-200">确认删除</h3><p class="text-sm text-slate-400">此操作不可恢复。</p></div>
+      </div>
+      <div class="flex gap-3 justify-end mt-6">
+        <button id="cancelDeleteBtn" class="flex-1 px-4 py-2.5 border border-white/15 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/10 transition">取消</button>
+        <button id="confirmDeleteBtn" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white rounded-lg text-sm font-semibold shadow-lg shadow-rose-500/30 transition btn-primary">删除</button>
+      </div>
+    </div>
+  </div>
+<script>
+const state={libraries:[],selectedLibraries:new Set(),currentLibrary:null,questions:[],originalQuestions:[],currentIndex:0,answered:new Map(),currentAnswer:null,isSubmitted:false,isEditMode:false,editingQuestionId:null,showJumpSidebar:false,quizMode:'sequential',selectedBlank:null,blankAnswers:{}};
+const els={libraryToggleBtn:document.getElementById('libraryToggleBtn'),libraryDropdown:document.getElementById('libraryDropdown'),libraryCheckboxes:document.getElementById('libraryCheckboxes'),selectedLibraryText:document.getElementById('selectedLibraryText'),selectAllLibrariesBtn:document.getElementById('selectAllLibrariesBtn'),clearAllLibrariesBtn:document.getElementById('clearAllLibrariesBtn'),startQuizBtn:document.getElementById('startQuizBtn'),addQuestionBtn:document.getElementById('addQuestionBtn'),toggleJumpBtn:document.getElementById('toggleJumpBtn'),closeJumpBtn:document.getElementById('closeJumpBtn'),jumpSidebar:document.getElementById('jumpSidebar'),jumpGrid:document.getElementById('jumpGrid'),progress:document.getElementById('progress'),progressBar:document.getElementById('progressBar'),correct:document.getElementById('correct'),wrong:document.getElementById('wrong'),accuracy:document.getElementById('accuracy'),resetBtn:document.getElementById('resetBtn'),loadingState:document.getElementById('loadingState'),quizState:document.getElementById('quizState'),currentNum:document.getElementById('currentNum'),typeBadge:document.getElementById('typeBadge'),questionContent:document.getElementById('questionContent'),optionsArea:document.getElementById('optionsArea'),resultArea:document.getElementById('resultArea'),submitBtn:document.getElementById('submitBtn'),nextBtn:document.getElementById('nextBtn'),prevBtn:document.getElementById('prevBtn'),editQuestionBtn:document.getElementById('editQuestionBtn'),modalOverlay:document.getElementById('modalOverlay'),modalTitle:document.getElementById('modalTitle'),modalTabs:document.getElementById('modalTabs'),closeModalBtn:document.getElementById('closeModalBtn'),deleteQuestionBtn:document.getElementById('deleteQuestionBtn'),tabManual:document.getElementById('tabManual'),tabUpload:document.getElementById('tabUpload'),formManual:document.getElementById('formManual'),formUpload:document.getElementById('formUpload'),targetLibraryField:document.getElementById('targetLibraryField'),targetLibrary:document.getElementById('targetLibrary'),targetLibraryUpload:document.getElementById('targetLibraryUpload'),questionType:document.getElementById('questionType'),optionsSection:document.getElementById('optionsSection'),optionsInput:document.getElementById('optionsInput'),answerSection:document.getElementById('answerSection'),answerSingle:document.getElementById('answerSingle'),answerFill:document.getElementById('answerFill'),answerMultiple:document.getElementById('answerMultiple'),saveQuestionBtn:document.getElementById('saveQuestionBtn'),uploadDropzone:document.getElementById('uploadDropzone'),jsonFileInput:document.getElementById('jsonFileInput'),previewArea:document.getElementById('previewArea'),importBtn:document.getElementById('importBtn'),deleteModalOverlay:document.getElementById('deleteModalOverlay'),cancelDeleteBtn:document.getElementById('cancelDeleteBtn'),confirmDeleteBtn:document.getElementById('confirmDeleteBtn'),answerCloze:document.getElementById('answerCloze')};
+async function fetchLibraries(){const r=await fetch('/api/libraries');const j=await r.json();state.libraries=j.libraries;initLibraryDropdown()}
+async function fetchLibrary(n){const r=await fetch('/api/library/'+n);const j=await r.json();state.currentLibrary=j.name;state.questions=j.questions;state.originalQuestions=[...j.questions];state.currentIndex=0;state.answered=new Map();state.isSubmitted=false;state.quizMode=document.querySelector('input[name="quizMode"]:checked').value;renderQuestion();updateStats()}
+async function fetchMultipleLibraries(l,m){let a=[];state.currentLibrary=l[0]||null;for(const x of l){const r=await fetch('/api/library/'+x);const j=await r.json();a=a.concat(j.questions)}state.originalQuestions=[...a];state.questions=m==='random'?shuffle([...a]):a;state.currentIndex=0;state.answered=new Map();state.isSubmitted=false;renderQuestion();updateStats()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function initLibraryDropdown(){els.libraryCheckboxes.innerHTML='';state.selectedLibraries=new Set();state.libraries.forEach(l=>{const lb=document.createElement('label');lb.className='flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-white/10 cursor-pointer transition text-sm text-slate-300';const c=document.createElement('input');c.type='checkbox';c.value=l;c.className='w-4 h-4 rounded border-white/20 text-indigo-500 focus:ring-indigo-500/40 bg-transparent';c.addEventListener('change',()=>{c.checked?state.selectedLibraries.add(l):state.selectedLibraries.delete(l);updateSelectedLibraryText()});const s=document.createElement('span');s.textContent=l;lb.appendChild(c);lb.appendChild(s);els.libraryCheckboxes.appendChild(lb)});if(state.libraries.length>0){state.libraries.forEach(l=>state.selectedLibraries.add(l));updateSelectedLibraryText();els.libraryCheckboxes.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true)}}
+function updateSelectedLibraryText(){const c=state.selectedLibraries.size;els.selectedLibraryText.textContent=c===0?'请选择':c===1?Array.from(state.selectedLibraries)[0]:'已选 '+c+' 个题库'}
+function updateStats(){const t=state.questions.length;let c=0,w=0;state.answered.forEach(a=>{a.correct?c++:w++});const a=c+w;els.progress.textContent=a+'/'+t;els.correct.textContent=c;els.wrong.textContent=w;els.accuracy.textContent=a?Math.round(c/a*100)+'%':'0%';if(els.progressBar){const p=t>0?a/t*100:0;els.progressBar.style.width=p+'%'}}
+function renderJumpGrid(){els.jumpGrid.innerHTML='';state.questions.forEach((q,i)=>{const b=document.createElement('button');b.className='jump-btn w-8 h-8 text-xs rounded-lg flex items-center justify-center font-medium transition';b.textContent=i+1;if(i===state.currentIndex)b.className+=' jump-btn-active';else if(state.answered.has(i))b.className+=(state.answered.get(i).correct?' jump-btn-correct':' jump-btn-wrong');b.addEventListener('click',()=>{state.currentIndex=i;renderJumpGrid();renderQuestion()});els.jumpGrid.appendChild(b)})}
+function renderQuestion(){if(!state.questions.length){els.loadingState.classList.remove('hidden');els.quizState.classList.add('hidden');return}els.loadingState.classList.add('hidden');els.quizState.classList.remove('hidden');const q=state.questions[state.currentIndex];state.isSubmitted=state.answered.has(state.currentIndex);state.currentAnswer=null;state.selectedBlank=null;state.blankAnswers={};els.currentNum.textContent=state.currentIndex+1;const tl={single:'单选',multiple:'多选',judge:'判断',fill:'填空',cloze:'完形填空'};const tc={single:'bg-indigo-500/20 text-indigo-300',multiple:'bg-purple-500/20 text-purple-300',judge:'bg-cyan-500/20 text-cyan-300',fill:'bg-amber-500/20 text-amber-300',cloze:'bg-pink-500/20 text-pink-300'};els.typeBadge.textContent=tl[q.type];els.typeBadge.className='badge-type '+(tc[q.type]||'bg-indigo-500/20 text-indigo-300');els.questionContent.textContent=q.type==='cloze'?'':q.content;renderOptions(q);els.prevBtn.disabled=state.currentIndex===0;if(state.isSubmitted){const r=state.answered.get(state.currentIndex);showResult(q,r.correct);els.submitBtn.classList.add('hidden');els.nextBtn.classList.remove('hidden')}else{els.resultArea.classList.add('hidden');els.submitBtn.classList.remove('hidden');els.nextBtn.classList.remove('hidden')}renderJumpGrid()}
+function renderOptions(q){els.optionsArea.innerHTML='';if(q.type==='fill'){const i=document.createElement('input');i.type='text';i.className='fill-input w-full rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition';i.placeholder='请输入答案';if(state.isSubmitted)i.disabled=true;i.addEventListener('input',e=>{state.currentAnswer=e.target.value});els.optionsArea.appendChild(i);return}if(q.type==='cloze'){renderClozeOptions(q);return}const isM=q.type==='multiple';const t=isM?'checkbox':'radio';const n='q_'+q.id;q.options.forEach((o,i)=>{const d=document.createElement('div');d.className='option-card flex items-center p-3 md:p-4 rounded-xl cursor-pointer';d.id='o_'+i;const c=document.createElement('input');c.type=t;c.name=n;c.value=i;c.className='w-4 h-4 shrink-0 pointer-events-none';if(state.isSubmitted)c.disabled=true;c.addEventListener('change',()=>{if(isM){if(!state.currentAnswer)state.currentAnswer=[];if(c.checked){state.currentAnswer.push(i);state.currentAnswer.sort((a,b)=>a-b);d.classList.add('selected')}else{state.currentAnswer=state.currentAnswer.filter(v=>v!==i);d.classList.remove('selected')}}else{state.currentAnswer=i;document.querySelectorAll('#optionsArea .option-card').forEach(el=>el.classList.remove('selected'));d.classList.add('selected')}});d.addEventListener('click',()=>{if(state.isSubmitted)return;c.click()});const s=document.createElement('span');s.className='ml-3 text-sm md:text-base text-slate-300 pointer-events-none';s.textContent=String.fromCharCode(65+i)+'. '+o;d.appendChild(c);d.appendChild(s);els.optionsArea.appendChild(d)})}
+function renderClozeOptions(q){
+try{
+const parts=q.content.split('___');
+const numBlanks=parts.length-1;
+const container=document.createElement('div');
+container.className='space-y-4';
+if(state.isSubmitted){const prev=state.answered.get(state.currentIndex);if(prev&&prev.answer)state.blankAnswers={...prev.answer}}
+const passageDiv=document.createElement('div');
+passageDiv.className='text-base text-slate-200 leading-relaxed whitespace-pre-wrap mb-4';
+for(var i=0;i<parts.length;i++){
+passageDiv.appendChild(document.createTextNode(parts[i]));
+if(i<numBlanks){
+var blank=document.createElement('span');
+var ans=state.blankAnswers[i];
+if(ans!==undefined&&q.options&&q.options[ans]){
+blank.textContent=String.fromCharCode(65+ans)+'. '+q.options[ans];
+if(state.isSubmitted){blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 rounded text-center text-sm '+(q.answer&&q.answer[i]===ans?'bg-emerald-500/20 text-emerald-300 border border-emerald-400':'bg-rose-500/20 text-rose-300 border border-rose-400')}
+else{blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 rounded text-center text-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400'}
+}else{
+blank.textContent=i+1;
+blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 border-b-2 border-dashed rounded text-center text-sm border-white/20 text-slate-500 transition';
+if(i===state.selectedBlank)blank.className+=' bg-indigo-500/20 border-indigo-400';
+if(!state.isSubmitted){blank.style.cursor='pointer';blank.setAttribute('data-blank',i);blank.onclick=(function(idx){return function(){state.selectedBlank=state.selectedBlank===idx?null:idx;renderOptions(q)}})(i)}
+}
+passageDiv.appendChild(blank);
+}
+}
+container.appendChild(passageDiv);
+if(q.options&&q.options.length){
+var optsDiv=document.createElement('div');
+optsDiv.className='flex flex-wrap gap-2 pt-4 border-t border-white/10';
+for(var j=0;j<q.options.length;j++){
+var btn=document.createElement('button');
+btn.className='px-3 py-1.5 rounded-lg text-sm font-medium transition border';
+var used=null;
+for(var k in state.blankAnswers){if(state.blankAnswers[k]===j){used=parseInt(k);break}}
+btn.textContent=used!==null?String.fromCharCode(65+j)+'. '+q.options[j]+' → '+(used+1):String.fromCharCode(65+j)+'. '+q.options[j];
+if(state.isSubmitted){
+if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200 opacity-60'}
+else{btn.className+=' bg-white/5 border-white/10 text-slate-300';if(q.answer&&q.answer.indexOf(j)>=0)btn.className+=' border-emerald-400 text-emerald-300'}
+btn.disabled=true;
+}else{
+if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200'}
+else{btn.className+=' bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-indigo-400'}
+btn.onclick=(function(idx,isUsed){return function(){if(isUsed!==null){delete state.blankAnswers[isUsed]}else if(state.selectedBlank!==null){for(var k2 in state.blankAnswers){if(state.blankAnswers[k2]===idx)delete state.blankAnswers[k2]}state.blankAnswers[state.selectedBlank]=idx;state.selectedBlank=null}renderOptions(q)}})(j,used);
+}
+optsDiv.appendChild(btn);
+}
+container.appendChild(optsDiv);
+}
+els.optionsArea.appendChild(container);
+}catch(e){console.error(e);els.optionsArea.innerHTML='<p class="text-rose-400 text-sm p-4">渲染失败: '+e.message+'</p>'}
+}
+function checkAnswer(q,a){if(q.type==='fill'){const ca=Array.isArray(q.answer)?q.answer:[q.answer];return ca.some(c=>String(c).toLowerCase().trim()===String(a).toLowerCase().trim())}else if(q.type==='cloze'){if(!q.answer||!Array.isArray(q.answer))return false;const blankCount=q.content.split('___').length-1;if(Object.keys(a).length!==blankCount)return false;for(let i=0;i<blankCount;i++){if(a[i]!==q.answer[i])return false}return true}else if(q.type==='multiple'){if(!Array.isArray(a)||a.length!==q.answer.length)return false;return a.every((v,i)=>v===q.answer[i])}else{return a===q.answer}}
+function showResult(q,c){els.resultArea.classList.remove('hidden');els.resultArea.className='mb-5 p-4 rounded-xl border animate-slide-up '+(c?'bg-emerald-500/10 border-emerald-500/30':'bg-rose-500/10 border-rose-500/30');const ic=c?'<svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>':'<svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';let h='<div class="flex items-start gap-2.5">'+ic+'<div><p class="font-semibold '+(c?'text-emerald-400':'text-rose-400')+'">'+(c?'回答正确！':'回答错误')+'</p>';if(q.type==='cloze'&&!c&&q.options){h+='<div class="mt-2 text-sm text-slate-400">正确答案：';q.answer.forEach((ai,i)=>{if(q.options[ai])h+=String.fromCharCode(65+ai)+'.'+q.options[ai]+' '});h+='</div>'}if(q.explanation)h+='<p class="mt-1.5 text-sm text-slate-400 leading-relaxed">解析：'+q.explanation+'</p>';h+='</div></div>';els.resultArea.innerHTML=h;const ci=Array.isArray(q.answer)?q.answer:[q.answer];if(!c&&q.type!=='fill'&&q.type!=='cloze'){ci.forEach(i=>{const e=document.getElementById('o_'+i);if(e){e.classList.remove('selected','wrong');e.classList.add('correct')}})}if(state.answered.has(state.currentIndex)){const a=state.answered.get(state.currentIndex);const ua=a.answer;if(q.type!=='fill'&&q.type!=='judge'&&q.type!=='cloze'){if(Array.isArray(ua)){ua.forEach(i=>{const e=document.getElementById('o_'+i);if(e&&!ci.includes(i))e.classList.add('wrong')})}else if(!a.correct){const e=document.getElementById('o_'+ua);if(e&&!ci.includes(ua))e.classList.add('wrong')}}}}
+function openEditModal(){state.isEditMode=true;const q=state.questions[state.currentIndex];state.editingQuestionId=q.id;els.modalTitle.textContent='编辑题目';els.targetLibrary.value=state.currentLibrary||'';els.questionType.value=q.type;document.getElementById('questionContentInput').value=q.content;els.optionsInput.value=q.options?q.options.join('\\n'):'';updateAnswerOptions();updateSelectedLibraryText();if(q.type==='cloze'){els.answerCloze.value=Array.isArray(q.answer)?q.answer.map(i=>String.fromCharCode(65+i)).join(' '):''}else if(q.type==='multiple'){updateMultipleAnswerOptions();els.answerMultiple.querySelectorAll('input[type="checkbox"]').forEach(cb=>{if(q.answer.includes(parseInt(cb.value)))cb.checked=true})}else if(q.type==='fill'){els.answerFill.value=Array.isArray(q.answer)?q.answer.join(', '):q.answer}else{els.answerSingle.value=q.answer}document.getElementById('explanationInput').value=q.explanation||'';els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden');els.modalOverlay.classList.remove('hidden')}
+function openAddModal(){state.isEditMode=false;state.editingQuestionId=null;els.modalTitle.textContent='录入题目';els.questionType.value='single';document.getElementById('questionContentInput').value='';els.optionsInput.value='';els.answerFill.value='';els.answerCloze.value='';document.getElementById('explanationInput').value='';renderModalLibraries();updateAnswerOptions();els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden');els.modalOverlay.classList.remove('hidden')}
+function updateAnswerOptions(){const t=els.questionType.value;if(t==='fill'){els.optionsSection.classList.add('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.remove('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden')}else if(t==='cloze'){els.optionsSection.classList.remove('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.remove('hidden')}else if(t==='multiple'){els.optionsSection.classList.remove('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.remove('hidden');els.answerCloze.classList.add('hidden');updateMultipleAnswerOptions()}else if(t==='judge'){els.optionsSection.classList.add('hidden');els.answerSingle.innerHTML='<option value="0">正确</option><option value="1">错误</option>';els.answerSingle.classList.remove('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden')}else{els.optionsSection.classList.remove('hidden');els.answerSingle.classList.remove('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden');const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerSingle.innerHTML=o.map((_,i)=>'<option value="'+i+'">'+String.fromCharCode(65+i)+'</option>').join('')}}
+function updateMultipleAnswerOptions(){const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerMultiple.innerHTML=o.map((x,i)=>'<label class="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition text-sm text-slate-300"><input type="checkbox" value="'+i+'" class="w-4 h-4 rounded text-indigo-500 focus:ring-indigo-500/40"><span>'+String.fromCharCode(65+i)+'. '+x+'</span></label>').join('')}
+function renderModalLibraries(){els.targetLibrary.innerHTML=state.libraries.map(l=>'<option value="'+l+'">'+l+'</option>').join('');els.targetLibraryUpload.innerHTML=state.libraries.map(l=>'<option value="'+l+'">'+l+'</option>').join('');if(state.libraries.length>0){els.targetLibrary.value=state.currentLibrary||state.libraries[0];els.targetLibraryUpload.value=state.currentLibrary||state.libraries[0]}}
+els.libraryToggleBtn.addEventListener('click',e=>{e.stopPropagation();els.libraryDropdown.classList.toggle('hidden')});
+document.addEventListener('click',e=>{if(!els.libraryToggleBtn.contains(e.target)&&!els.libraryDropdown.contains(e.target))els.libraryDropdown.classList.add('hidden')});
+els.selectAllLibrariesBtn.addEventListener('click',()=>{state.libraries.forEach(l=>state.selectedLibraries.add(l));els.libraryCheckboxes.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true);updateSelectedLibraryText()});
+els.clearAllLibrariesBtn.addEventListener('click',()=>{state.selectedLibraries.clear();els.libraryCheckboxes.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);updateSelectedLibraryText()});
+els.toggleJumpBtn.addEventListener('click',()=>{state.showJumpSidebar=!state.showJumpSidebar;els.jumpSidebar.classList.toggle('hidden')});
+if(els.closeJumpBtn)els.closeJumpBtn.addEventListener('click',()=>{state.showJumpSidebar=false;els.jumpSidebar.classList.add('hidden')});
+els.startQuizBtn.addEventListener('click',()=>{const m=document.querySelector('input[name="quizMode"]:checked').value;state.quizMode=m;if(state.selectedLibraries.size>0)fetchMultipleLibraries(Array.from(state.selectedLibraries),m);else if(state.libraries.length>0){const f=state.libraries[0];state.selectedLibraries.add(f);updateSelectedLibraryText();fetchMultipleLibraries([f],m)}else alert('没有可用的题库，请先在 data/ 目录下创建 JSON 文件。')});
+els.submitBtn.addEventListener('click',()=>{const q=state.questions[state.currentIndex];if(q.type==='cloze'){state.currentAnswer={...state.blankAnswers};const blankCount=q.content.split('___').length-1;if(Object.keys(state.blankAnswers).length!==blankCount){alert('请填写所有空格后再提交！');return}}else if(state.currentAnswer===null||state.currentAnswer===''||(Array.isArray(state.currentAnswer)&&state.currentAnswer.length===0)){alert('请先选择或输入答案！');return}const c=checkAnswer(q,state.currentAnswer);state.answered.set(state.currentIndex,{correct:c,answer:state.currentAnswer});state.isSubmitted=true;showResult(q,c);updateStats();els.submitBtn.classList.add('hidden');renderJumpGrid()});
+els.nextBtn.addEventListener('click',()=>{if(state.currentIndex<state.questions.length-1){state.currentIndex++;renderQuestion()}else{if(state.answered.size>=state.questions.length)alert('🎉 恭喜你完成了所有题目！');else alert('已完成所有题目！')}});
+els.prevBtn.addEventListener('click',()=>{if(state.currentIndex>0){state.currentIndex--;renderQuestion()}});
+els.resetBtn.addEventListener('click',()=>{if(state.selectedLibraries.size>0)fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode);else if(state.currentLibrary)fetchLibrary(state.currentLibrary)});
+els.editQuestionBtn.addEventListener('click',openEditModal);
+els.addQuestionBtn.addEventListener('click',openAddModal);
+els.closeModalBtn.addEventListener('click',()=>{els.modalOverlay.classList.add('hidden')});
+els.modalOverlay.addEventListener('click',e=>{if(e.target===els.modalOverlay)els.modalOverlay.classList.add('hidden')});
+els.tabManual.addEventListener('click',()=>{els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden')});
+els.tabUpload.addEventListener('click',()=>{els.tabUpload.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabManual.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formUpload.classList.remove('hidden');els.formManual.classList.add('hidden')});
+els.questionType.addEventListener('change',updateAnswerOptions);
+els.optionsInput.addEventListener('input',()=>{const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerSingle.innerHTML=o.map((_,i)=>'<option value="'+i+'">'+String.fromCharCode(65+i)+'</option>').join('');if(els.questionType.value==='multiple')updateMultipleAnswerOptions()});
+els.saveQuestionBtn.addEventListener('click',async()=>{const t=els.questionType.value;const c=document.getElementById('questionContentInput').value.trim();if(!c){alert('请填写题目内容！');return}const q={type:t,content:c};if(t!=='fill')q.options=els.optionsInput.value.split('\\n').filter(l=>l.trim());if(t==='cloze'){const letters=els.answerCloze.value.trim().split(/\\s+/);q.answer=letters.map(l=>l.toUpperCase().charCodeAt(0)-65)}else if(t==='multiple')q.answer=Array.from(els.answerMultiple.querySelectorAll('input:checked')).map(i=>parseInt(i.value));else if(t==='fill'){const a=els.answerFill.value;q.answer=a.includes(',')?a.split(',').map(s=>s.trim()):a}else q.answer=parseInt(els.answerSingle.value);const e=document.getElementById('explanationInput').value.trim();if(e)q.explanation=e;if(state.isEditMode){await updateQuestion(state.currentLibrary,state.editingQuestionId,q);if(state.selectedLibraries.size>0)await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode);else if(state.currentLibrary)await fetchLibrary(state.currentLibrary)}else{const lb=els.targetLibrary.value;await addQuestion(lb,q);if(state.selectedLibraries.has(lb))await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode)}els.modalOverlay.classList.add('hidden')});
+els.uploadDropzone.addEventListener('dragover',e=>{e.preventDefault();els.uploadDropzone.classList.add('border-indigo-400','bg-indigo-500/10')});
+els.uploadDropzone.addEventListener('dragleave',e=>{e.preventDefault();els.uploadDropzone.classList.remove('border-indigo-400','bg-indigo-500/10')});
+els.uploadDropzone.addEventListener('drop',e=>{e.preventDefault();els.uploadDropzone.classList.remove('border-indigo-400','bg-indigo-500/10')});
+els.jsonFileInput.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());const q=Array.isArray(d)?d:[d];els.previewArea.innerHTML='<p class="font-medium text-slate-200">预览：'+q.length+' 道题目</p><ul class="mt-2 space-y-1 text-xs text-slate-400">'+q.slice(0,10).map((x,i)=>'<li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>'+(i+1)+'. '+(x.content||'(无题目内容)')+'</li>').join('')+(q.length>10?'<li class="text-slate-500">...还有 '+(q.length-10)+' 道</li>':'')+'</ul>';els.previewArea.classList.remove('hidden');els.importBtn.classList.remove('hidden');els.importBtn.dataset.questions=JSON.stringify(q)}catch{alert('JSON 格式错误，请检查文件。')}});
+els.importBtn.addEventListener('click',async()=>{const l=els.targetLibraryUpload.value;const q=JSON.parse(els.importBtn.dataset.questions);const r=await fetch('/api/batch-import?library='+encodeURIComponent(l),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});if(r.ok){alert('成功导入 '+q.length+' 道题目！');els.modalOverlay.classList.add('hidden');if(state.selectedLibraries.has(l))await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode)}else alert('导入失败，请重试。')});
+els.deleteQuestionBtn.addEventListener('click',()=>{if(state.questions.length)els.deleteModalOverlay.classList.remove('hidden')});
+els.cancelDeleteBtn.addEventListener('click',()=>{els.deleteModalOverlay.classList.add('hidden')});
+els.deleteModalOverlay.addEventListener('click',e=>{if(e.target===els.deleteModalOverlay)els.deleteModalOverlay.classList.add('hidden')});
+els.confirmDeleteBtn.addEventListener('click',async()=>{const q=state.questions[state.currentIndex];const l=state.currentLibrary;if(!l)return;const d=await(await fetch('/api/delete-question',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({library:l,question_id:q.id})})).json();if(d.success){els.deleteModalOverlay.classList.add('hidden');if(state.selectedLibraries.size>0)await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode);else await fetchLibrary(l)}else alert('删除失败')});
+async function addQuestion(l,q){const r=await fetch('/api/add-question',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library:l,question:q})});return r.json()}
+async function updateQuestion(l,i,q){const r=await fetch('/api/update-question',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({library:l,question_id:i,question:q})});return r.json()}
+fetchLibraries();
+</script>
+</body>
+</html>
