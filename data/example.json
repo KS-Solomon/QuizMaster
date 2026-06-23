@@ -1,0 +1,115 @@
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "Python 中用于定义函数的关键字是？",
+    "options": [
+      "function",
+      "def",
+      "func",
+      "define"
+    ],
+    "answer": 1,
+    "explanation": "Python 使用 def 关键字来定义函数。"
+  },
+  {
+    "id": 2,
+    "type": "multiple",
+    "content": "以下哪些是 JavaScript 的数据类型？（多选）",
+    "options": [
+      "String",
+      "Number",
+      "Boolean",
+      "Character",
+      "以上都是"
+    ],
+    "answer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "JavaScript 的基本数据类型包括 String、Number、Boolean、Undefined、Null、Symbol、BigInt，没有单独的 Character 类型。"
+  },
+  {
+    "id": 3,
+    "type": "judge",
+    "content": "HTML 是一种编程语言。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1,
+    "explanation": "HTML 是标记语言（Markup Language），不是编程语言。"
+  },
+  {
+    "id": 4,
+    "type": "fill",
+    "content": "HTTP 协议中，成功响应的状态码是______。",
+    "answer": [
+      "200",
+      "200 OK"
+    ],
+    "explanation": "HTTP 200 表示请求成功。"
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "题目内容",
+    "options": [
+      "选项A",
+      "选项B",
+      "选项C",
+      "选项D"
+    ],
+    "answer": 1,
+    "explanation": "解析（可选）"
+  },
+  {
+    "id": 6,
+    "type": "cloze",
+    "content": "English is a global language. It is ___ by millions of people around the world. Learning English can ___ many doors for your career. It takes time and ___ to become fluent, but the rewards are great. Many people find that ___ to English music and watching movies helps improve their skills.",
+    "options": [
+      "practice",
+      "listening",
+      "spoken",
+      "open"
+    ],
+    "answer": [
+      2,
+      3,
+      0,
+      1
+    ],
+    "explanation": "空格1: spoken (被数百万人使用); 空格2: open (打开许多门); 空格3: practice (需要时间和练习); 空格4: listening (听英语音乐)。"
+  },
+  {
+    "id": 7,
+    "type": "cloze",
+    "content": "The culture of New York City is shaped by centuries of immigration, the city’s size and variety, and its status as the cultural capital of the United States. Because of its 1)___ size and cultural influence, New York has been the 2)___ of many different, and often 3)___, portrayals in the mass media. From the sophisticated and 4)___ metropolis seen in many Woody Allen films, to the hellish and 5)___ urban jungle depicted in such movies as Martin Scorsese’s Taxi Driver, New York has served as the unwitting backdrop for virtually every conceivable viewpoint on big city life.\n\nIn the early years of film New York City was characterized as urbane and 6)___. By the city’s crisis period in the 1970s, however, films like Midnight Cowboy, The French Connection, Marathon Man, and Death Wish showed New York as full of chaos and 7)___. With the city’s renaissance in the 1980s and 1990s came new portrayals on television; Friends, Seinfeld, and Sex and the City showed life in the city to be 8)___ and interesting. Nonetheless a disproportionate number of 9)___ dramas, such as Law & Order, continue to make criminality in the city their subject, even as New York has become the 10)___ large city in the United States in the last two decades.",
+    "options": [
+      "contradictory",
+      "worldly",
+      "sophisticated",
+      "glamorous",
+      "crime",
+      "subject",
+      "safest",
+      "sheer",
+      "chaotic",
+      "violence"
+    ],
+    "answer": [
+      7,
+      5,
+      0,
+      1,
+      8,
+      2,
+      9,
+      3,
+      4,
+      6
+    ],
+    "explanation": "1) sheer size 庞大的规模；2) the subject of ……的描绘对象；3) contradictory 相互矛盾的；4) worldly 繁华世故的；5) chaotic 混乱无序的；6) sophisticated 精致高雅的；7) violence 暴力；8) glamorous 光鲜迷人的；9) crime dramas 犯罪题材剧集；10) the safest 最安全的。"
+  }
+]
