@@ -1,0 +1,113 @@
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "Apologies are in order when Mr. Smith is mistaken for Mr. Jones.（划线词：order）",
+    "options": [
+      "appropriate under the circumstances",
+      "the way that things or events are arranged in relation to each other, for example showing whether something is first, second, third, etc.",
+      "the food or drink you have asked for in a restaurant or bar"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "type": "single",
+    "content": "Human nature is the basis of character, temperament and disposition.（划线词：disposition）",
+    "options": [
+      "the position or arrangement of something in a particular place",
+      "a tendency or willingness to behave in many ways",
+      "a particular type of character which makes someone likely to behave or react in a certain way"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 3,
+    "type": "single",
+    "content": "It is only the surface that is capable of alteration, improvement and refinement.（划线词：refinement）",
+    "options": [
+      "something that has been found again",
+      "improving something; making something better than it was before",
+      "having cultured elegance"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 4,
+    "type": "single",
+    "content": "Man’s majesty and nobility are taken for granted, although his faults and weaknesses are constantly paraded before our eyes.（划线词：paraded）",
+    "options": [
+      "to walk or march together to celebrate or protest about something",
+      "to show something publicly",
+      "a public celebration when musical bands, brightly decorated vehicles, etc. move down the street"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "But the murderer, robber or wife beater is singled out for publicity, because such conduct is unusual.（划线词：singled）",
+    "options": [
+      "the only one",
+      "people who are not married and are not involved in a romantic relationship with anyone",
+      "to separate or choose from a group, especially for special treatment or notice"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 6,
+    "type": "single",
+    "content": "Every man unfolds a distinct character over which circumstances and education have only the most limited control.（划线词：distinct）",
+    "options": [
+      "separate, clearly different in quality, belonging to a different and particular type",
+      "(something) clearly be seen, heard, smelled, etc.",
+      "(a possibility, feeling, quality, etc.) definitely existing and cannot be ignored"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "type": "single",
+    "content": "He was made to advance; the power to do so distinguishes him from the animal.（划线词：distinguishes）",
+    "options": [
+      "to recognize and understand the difference between two or more things or people",
+      "to be the thing that makes someone or something different or special",
+      "to do something so well that people notice and remember you"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 8,
+    "type": "single",
+    "content": "Each holds to the structure of the mold into which the soul was cast at the time of its individualization.（划线词：cast）",
+    "options": [
+      "all the people who perform in a play, film, etc.",
+      "to throw or drop",
+      "to shape (metal or other material) by pouring it into a mold while molten"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 9,
+    "type": "single",
+    "content": "One plunges into the surf and rescues a swimmer from drowning; another dashes into a burning house and carries a stranger to safety.（划线词：surf）",
+    "options": [
+      "the mass or line of foam formed by waves breaking on a seashore or reef",
+      "to ride on the crest of a wave, typically toward the shore while riding on a surfboard",
+      "to move from site to site on the Internet"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "type": "single",
+    "content": "Human nature does not and cannot change but unfolds its inherent pattern on the loom of Eternal Time.（划线词：unfolds）",
+    "options": [
+      "(a story) being told",
+      "(a series of events) happens",
+      "(something) opens out, develops"
+    ],
+    "answer": 2
+  }
+]
+

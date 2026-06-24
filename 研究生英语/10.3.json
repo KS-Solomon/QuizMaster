@@ -1,0 +1,31 @@
+[
+  {
+    "id": 1,
+    "type": "cloze",
+    "content": "选词框词汇：nation, likely, dedicate, deep, how, balance, contribute, potential, explore, production\n\nThe moral imperative begins by considering the value of education which is much 1)___ than earning potential or building human capital. Education is what it takes to lead fuller lives and to 2)___ to our nation and the world.\n\nHigher education in particular affords students the opportunities to 3)___ history, debate important issues, and discover their passions and 4)___.\n\nOur founders understood 5)___ important education is to the idea of America as a just, equitable, and 6)___ society. A nation of educated individuals is more 7)___ to strengthen the institutions, from government, to business to our schools they rely upon.\n\nConsider graduation rates. Fifteen percent of our high schools 8)___ half of our dropouts, and these schools are disproportionately in low-income areas with mostly minority students.\n9)___, one of every two African American and Hispanic students drops out of high school.\n\nIf we are a nation 10)___ to equality, we cannot be satisfied with the status quo. Helping more students make it to college and succeed there is a morally urgent challenge.",
+    "options": [
+      "nation",
+      "likely",
+      "dedicate",
+      "deep",
+      "how",
+      "balance",
+      "contribute",
+      "potential",
+      "explore",
+      "production"
+    ],
+    "answer": [
+      3,
+      6,
+      8,
+      7,
+      4,
+      5,
+      1,
+      9,
+      0,
+      2
+    ]
+  }
+]

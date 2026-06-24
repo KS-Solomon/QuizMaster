@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "No country spends money for education, public and private, so lavishly as does the United States.",
+    "options": [
+      "The United States is the most wasteful country in terms of education.",
+      "The United States makes the most generous investment in education in the world.",
+      "The United States has the most lavish universities in the world.",
+      "Education in the United States is the most expensive in the world."
+    ],
+    "answer": 1,
+    "explanation": "原句意为没有国家在教育上的投入能像美国一样大手笔，lavishly表示慷慨大量地投入，对应B选项“美国在全球教育领域投入最为慷慨”。"
+  },
+  {
+    "id": 2,
+    "type": "single",
+    "content": "Our society’s confidence in its institutions of higher education is expressed through investments that wisely couple support for research with support for graduate education.",
+    "options": [
+      "Our society attaches greater importance to research than to graduate education.",
+      "A large proportion of the national budget goes to the development of education.",
+      "Our investments in education combine support for research with support for graduate education.",
+      "Our society’s lack of confidence in its institutions of higher education derives from generous investments made in education."
+    ],
+    "answer": 2,
+    "explanation": "couple A with B 意为将A与B结合，原句说明教育投资兼顾科研与研究生教育，和C选项表述完全一致。"
+  },
+  {
+    "id": 3,
+    "type": "single",
+    "content": "The medieval image of the university as an ivory tower… is an image that has been superseded by the modern university constructed not of ivory, but of a highly porous material…",
+    "options": [
+      "Hi-tech materials have been widely applied to modern universities.",
+      "Different from the medieval image of a university, a modern university is more open.",
+      "The university in the medieval times was made of very expensive materials.",
+      "The medieval image of the university as an ivory tower was made of a highly porous material."
+    ],
+    "answer": 1,
+    "explanation": "ivory tower象牙塔指代封闭隔绝的学府，porous material多孔材料比喻开放包容，原句表示现代大学取代了封闭的中世纪象牙塔形象，即现代大学更加开放。"
+  },
+  {
+    "id": 4,
+    "type": "single",
+    "content": "The search for new ideas and knowledge is not and cannot be motivated by utilitarian concerns.",
+    "options": [
+      "The search for new ideas and knowledge shouldn’t be driven by practical consideration.",
+      "The search for new ideas and knowledge is the priority concern of the United States.",
+      "The search for new ideas and knowledge should be based on practical consideration.",
+      "Young people in the United States are highly motivated to search for new ideas and knowledge."
+    ],
+    "answer": 0,
+    "explanation": "utilitarian concerns指功利、实用层面的考量，原句表示探索新知不能由功利目的驱动，与A选项同义。"
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "When the Nobel laureate John Nash developed the mathematical concepts underlying non-cooperative game theory as a graduate student at Princeton, he could not foresee that those concepts would be used today to analyze election strategies and the causes of war.",
+    "options": [
+      "Nash was awarded the Nobel Prize because he analyzed election strategies and the causes of war.",
+      "Nash was awarded the Nobel Prize because of the many applications of game theory.",
+      "When Nash developed his mathematical concepts, he himself had no idea that they would be used today for many other purposes.",
+      "Nash found many applications of his mathematical concepts underlying game theory."
+    ],
+    "answer": 2,
+    "explanation": "could not foresee意为无法预见，原句指纳什当年创立理论时，并未料到该理论如今会有诸多其他用途，对应C选项。"
+  },
+  {
+    "id": 6,
+    "type": "single",
+    "content": "…, for new knowledge often depends upon preparing fertile ground in obscure places where serendipity and good luck, as well as deep intelligence, can sprout.",
+    "options": [
+      "New knowledge entirely depends on good luck.",
+      "New knowledge is often found by luck but a creative environment is required for luck to flourish.",
+      "New knowledge may derive from the fields where scientists of intelligence cluster.",
+      "Good luck, rather than intelligence, plays a central role in searching for new knowledge."
+    ],
+    "answer": 1,
+    "explanation": "fertile ground沃土比喻适宜创新的环境，serendipity意外好运，原句说明新知诞生需要孕育机遇的良好环境，对应B。"
+  },
+  {
+    "id": 7,
+    "type": "single",
+    "content": "I hope that our country's decision-makers will draw on the knowledge that resides on our campuses…",
+    "options": [
+      "I hope the decision-makers will visit our campus.",
+      "I hope the decision-makers will return to campus to recharge themselves with new knowledge.",
+      "I hope the decision-makers will take full advantage of the knowledge in academic circles.",
+      "I hope the decision-makers will be pace-setters of colleges and universities."
+    ],
+    "answer": 2,
+    "explanation": "draw on意为利用、汲取，resides on our campuses指代校园学术界的知识，原句希望决策者充分利用学界知识，对应C。"
+  },
+  {
+    "id": 8,
+    "type": "single",
+    "content": "What we should seek to impart in our college, is not so much learning itself as the spirit of learning.",
+    "options": [
+      "We don’t expect our students to learn much.",
+      "We try to impart more learning to our students.",
+      "What we advocate first in our college is the spirit of learning rather than learning itself.",
+      "We seek to separate the learning process from the spirit of learning."
+    ],
+    "answer": 2,
+    "explanation": "not so much A as B 表示“与其说是A，不如说是B；更看重B而非A”，原句说明大学更应传授求知精神而非单纯知识，对应C。"
+  },
+  {
+    "id": 9,
+    "type": "single",
+    "content": "It consists… in the habit of catholic observation and a preference for the non-partisan point of view…",
+    "options": [
+      "It consists in the habit of religious observation and a preference for political affiliation.",
+      "It consists in the habit of careful observation and a preference for reasoning.",
+      "It consists in the habit of observation in varied areas and a preference for an impartial point of view.",
+      "It consists in the habit of observation like a catholic and a preference for an insightful viewpoint."
+    ],
+    "answer": 2,
+    "explanation": "catholic此处含义是广泛全面的，non-partisan无党派的、中立客观的；C选项中varied areas对应广泛观察，impartial point of view对应中立视角。"
+  },
+  {
+    "id": 10,
+    "type": "single",
+    "content": "Wilson, and the presidents who followed him, rejected the narrow idea of a liberal arts education as preparation for a profession.",
+    "options": [
+      "Wilson believed that a liberal arts education will prepare students better for a profession.",
+      "Wilson thought the preparation of students for a profession was narrow-minded.",
+      "Wilson didn’t think preparation for a profession was the only purpose of a liberal arts education.",
+      "Wilson criticized bitterly the idea of a liberal arts education as preparation for a profession."
+    ],
+    "answer": 2,
+    "explanation": "rejected the narrow idea意为否定这种狭隘观点——把博雅教育仅当作职业准备，即威尔逊认为职业准备并非博雅教育的唯一目的，选C。"
+  }
+]

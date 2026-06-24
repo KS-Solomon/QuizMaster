@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "Seat belts still decrease our risk of dying in an accident, but the statistics are not all black and white.",
+    "options": [
+      "Seat belts help to protect passengers from dying in car accidents, but data indicates that the situation is not clear.",
+      "Seat belts decrease our risk of dying; that is true."
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "type": "single",
+    "content": "What he found was that contrary to conventional wisdom, mandating the use of seat belts in 18 countries resulted in either no change or actually a net increase in road accident deaths.",
+    "options": [
+      "What he found was that using seat belts in 18 countries resulted in an actual net decrease in road accident deaths.",
+      "Surprisingly, he found that enforcing the use of seat belts does not decrease road accident deaths. That is true in 18 countries."
+    ],
+    "answer": 1
+  },
+  {
+    "id": 3,
+    "type": "single",
+    "content": "Nor will these possible concerns exist in a vacuum.",
+    "options": [
+      "The possible concerns will be affected by other factors.",
+      "These possible concerns will exist in outer-space where it's almost a vacuum."
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "type": "single",
+    "content": "The point, stresses Adams, is that drivers who feel safe may actually increase the risk that they pose to other drivers, bicyclists, pedestrians and their own passengers.",
+    "options": [
+      "According to Adams, drivers who feel safe may drive more carelessly, therefore, causing danger to other people.",
+      "Adams stresses that drivers who are posers may actually increase their risky behavior endangering other people."
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "In the case of seat belts, instead of a simple, straightforward reduction in deaths, the end result is actually a more complicated redistribution of risk and fatalities.",
+    "options": [
+      "Seat belts reduce the death rate no matter how complicated the distribution of risk and fatalities is.",
+      "Seat belts may seem to reduce the death rate, but actually the risks still exist but in a different way."
+    ],
+    "answer": 1
+  },
+  {
+    "id": 6,
+    "type": "single",
+    "content": "In everyday life, risk is a moving target, not a set number as statistics might suggest.",
+    "options": [
+      "In everyday life, risks varies and is not always quantifiable.",
+      "As statistics might suggest, there are risks whenever you move in your everyday life."
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "type": "single",
+    "content": "And still others are fatalists who may believe that a higher power devises mortality schedules that fix a predetermined time when our number is up.",
+    "options": [
+      "Some people believe that lucky numbers may predetermine whether we'll die or not in car accidents.",
+      "There are people who believe everything including death is preordained."
+    ],
+    "answer": 1
+  },
+  {
+    "id": 8,
+    "type": "single",
+    "content": "Consequently, any single measurement assigned to the risk of driving a car is bound to be only the roughest sort of benchmark.",
+    "options": [
+      "Consequently, all measurements used to avoid the risk of driving a car are restricted by rough manufacturing quality.",
+      "Therefore, the risk of driving a car cannot be clearly quantified."
+    ],
+    "answer": 1
+  },
+  {
+    "id": 9,
+    "type": "single",
+    "content": "The bottom line is that risk doesn't exist in a vacuum and that there are a host of factors that come into play, including the rewards of risk, whether they are financial, physical or emotional.",
+    "options": [
+      "Financial, physical and emotional rewards contribute to the increasing risk.",
+      "The level of risk has many influences, some of which are positive."
+    ],
+    "answer": 1
+  },
+  {
+    "id": 10,
+    "type": "single",
+    "content": "We make dozens of risk calculations daily, but you can book odds that most of them are so automatic or visceral—that we barely notice them.",
+    "options": [
+      "Everyday we instinctively and unknowingly make many decisions about our safety.",
+      "We calculate risks daily, but we barely notice them if we don't write them down."
+    ],
+    "answer": 0
+  }
+]

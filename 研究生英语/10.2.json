@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "The academy holds a highly privileged place in American society because of a long-standing national consensus about the value of education.（划线词：consensus）",
+    "options": ["agreement", "controversy", "confidence", "reputation"],
+    "answer": 0,
+    "explanation": "consensus 意为共识，与 agreement（一致意见）同义。"
+  },
+  {
+    "id": 2,
+    "type": "single",
+    "content": "She gave a staggeringly good performance in the TV program as a police officer investigating a murder.（划线词：staggeringly）",
+    "options": ["eventually", "credibly", "amazingly", "famously"],
+    "answer": 2,
+    "explanation": "staggeringly 表示惊人地、极其，与 amazingly（令人惊叹地）含义一致。"
+  },
+  {
+    "id": 3,
+    "type": "single",
+    "content": "The President expects that the research team will work together to explore the complex issues in an open and collegial manner to find a solution.（划线词：collegial）",
+    "options": ["concerted", "polished", "competitive", "cooperative"],
+    "answer": 3,
+    "explanation": "collegial 指同仁间协作友好的，cooperative 意为合作的，二者同义。"
+  },
+  {
+    "id": 4,
+    "type": "single",
+    "content": "A monk who lives in a monastery or temple has a relaxed and peaceful life of contemplation.（划线词：contemplation）",
+    "options": ["complain", "thinking", "contempt", "discovery"],
+    "answer": 1,
+    "explanation": "contemplation 意为沉思、冥想，对应 thinking（思索）。"
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "Iron began to supersede bronze for tool making about 3000 years ago.（划线词：supersede）",
+    "options": ["block", "replace", "intervene", "relegate"],
+    "answer": 1,
+    "explanation": "supersede 表示取代、替代，与 replace 同义。"
+  },
+  {
+    "id": 6,
+    "type": "single",
+    "content": "She was staring out over the lake, composing a poem in her mind.（划线词：composing）",
+    "options": ["illustration", "creating", "vision", "courage"],
+    "answer": 1,
+    "explanation": "compose 此处指创作（诗歌），create 意为创作、创造，语义匹配。"
+  },
+  {
+    "id": 7,
+    "type": "single",
+    "content": "Not all countries appoint a poet laureate but most countries have many poets.（划线词：laureate）",
+    "options": ["chairman", "nominee", "honored", "member"],
+    "answer": 2,
+    "explanation": "poet laureate 桂冠诗人，laureate 本身指获殊荣的、受表彰的，对应 honored。"
+  },
+  {
+    "id": 8,
+    "type": "single",
+    "content": "We cannot predict with any accuracy how current discoveries and scholarship will influence future generations.（划线词：scholarship）",
+    "options": ["prize", "invention", "intelligence", "learning"],
+    "answer": 3,
+    "explanation": "scholarship 此处指学术研究、学识，learning 表示学问、学术知识。"
+  },
+  {
+    "id": 9,
+    "type": "single",
+    "content": "We also have an obligation to ensure that the scholarly work of the academy is widely disseminated.（划线词：disseminated）",
+    "options": ["spread", "appreciated", "recommended", "recognized"],
+    "answer": 0,
+    "explanation": "disseminate 意为传播、散布，spread 表示传播、扩散。"
+  },
+  {
+    "id": 10,
+    "type": "single",
+    "content": "It would take nearly a book in itself to explain the scope, rigor, and stress of those tests.（划线词：rigor）",
+    "options": ["vigor", "strictness", "tradition", "pursuit"],
+    "answer": 1,
+    "explanation": "rigor 指严谨、严苛，strictness 意为严格、严谨。"
+  }
+]

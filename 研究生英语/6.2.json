@@ -1,0 +1,83 @@
+
+[
+  {
+    "id": 1,
+    "type": "single",
+    "content": "The press has been asked to respect the ______ of the Royal Family during this very difficult time.",
+    "options": ["individualism", "privacy", "isolation", "insulation"],
+    "answer": 1,
+    "explanation": "privacy 表示隐私；individualism 个人主义，isolation 孤立，insulation 绝缘。句意：要求媒体在这段艰难时期尊重王室的隐私。"
+  },
+  {
+    "id": 2,
+    "type": "single",
+    "content": "The pharmaceutical company attracted a ______ amount of funding for research into a cure for cancer.",
+    "options": ["considerate", "conservative", "countless", "considerable"],
+    "answer": 3,
+    "explanation": "considerable 大量的；considerate 体贴的，conservative 保守的，countless 无数的（后接可数名词复数）。a considerable amount of 大量的资金。"
+  },
+  {
+    "id": 3,
+    "type": "single",
+    "content": "A conference might help create new marketing ideas or provide a(n) ______ for discussion of problems.",
+    "options": ["arena", "playground", "stadium", "stage"],
+    "answer": 0,
+    "explanation": "arena 可指讨论、角逐的场所；playground 操场，stadium 体育场，stage 舞台。句意：会议可提供探讨问题的平台。"
+  },
+  {
+    "id": 4,
+    "type": "single",
+    "content": "His book is the cultural ______ of the year.",
+    "options": ["incident", "accident", "event", "affair"],
+    "answer": 2,
+    "explanation": "cultural event 文化盛事；incident 小事/事故，accident 意外事故，affair 私事、事务。"
+  },
+  {
+    "id": 5,
+    "type": "single",
+    "content": "The mountaintop provides a spectacular view of Innsbruck and its ______.",
+    "options": ["environments", "surroundings", "circumstances", "vicinities"],
+    "answer": 1,
+    "explanation": "surroundings 周边环境；environment 大环境，circumstances 境遇，vicinity 附近（常用复数vicinities较少）。its surroundings 城镇周边风光。"
+  },
+  {
+    "id": 6,
+    "type": "single",
+    "content": "Finance during marriage ______ is a very big issue particularly with regards to the mortgage and household bills.",
+    "options": ["separation", "division", "allocation", "detachment"],
+    "answer": 0,
+    "explanation": "marriage separation 婚姻分居；division 分割，allocation 分配，detachment 脱离。句意：婚姻分居期间的财务是大难题。"
+  },
+  {
+    "id": 7,
+    "type": "single",
+    "content": "Ed’s already ______ health deteriorated after he left the hospital.",
+    "options": ["invalid", "faint", "fragile", "crisp"],
+    "answer": 2,
+    "explanation": "fragile health 虚弱的身体；invalid 无效的/病人，faint 微弱的（多指光线声音），crisp 脆的。"
+  },
+  {
+    "id": 8,
+    "type": "single",
+    "content": "A man driven by ______ is capable of anything.",
+    "options": ["respect", "embarrassment", "conceit", "jealousy"],
+    "answer": 3,
+    "explanation": "jealousy 嫉妒；respect 尊重，embarrassment 尴尬，conceit 自负。句意：被嫉妒驱使的人什么事都做得出来。"
+  },
+  {
+    "id": 9,
+    "type": "single",
+    "content": "Glenn started acting ______ after his wife’s funeral.",
+    "options": ["popular", "peculiar", "particular", "persistent"],
+    "answer": 1,
+    "explanation": "act peculiar 举止古怪；popular 受欢迎的，particular 特定的，persistent 执着的。"
+  },
+  {
+    "id": 10,
+    "type": "single",
+    "content": "If a vitamin is frequently absent from the diet, a(n) ______ may develop.",
+    "options": ["efficiency", "sufficiency", "deficiency", "proficiency"],
+    "answer": 2,
+    "explanation": "deficiency 缺乏；efficiency 效率，sufficiency 充足，proficiency 熟练。vitamin deficiency 维生素缺乏症。"
+  }
+]

@@ -1,0 +1,101 @@
+
+[
+  {
+    "id": 1,
+    "type": "judge",
+    "content": "A considerable number of people come to New York because of the loneliness and privacy bestowed by the city.",
+    "options": ["正确", "错误"],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "type": "judge",
+    "content": "Everyone that comes to New York is a lucky person.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 3,
+    "type": "judge",
+    "content": "There are places of historical interest in every block of New York City",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 4,
+    "type": "judge",
+    "content": "The author’s favorite show is The Wizard of Oz.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 5,
+    "type": "judge",
+    "content": "The author felt excited by being close to Mr. Fred Stone.",
+    "options": ["正确", "错误"],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "type": "judge",
+    "content": "Few people like to be insulated against all the wonderful events that are taking place every minute in New York.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 7,
+    "type": "judge",
+    "content": "The author was eighteen-inches close to the governor of New York one day.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 8,
+    "type": "judge",
+    "content": "There were fewer Lions in New York compared with other metropolises.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 9,
+    "type": "judge",
+    "content": "It’s unavoidable to be hit by a falling cornice if one lives in other cities.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 10,
+    "type": "judge",
+    "content": "The Irish people in New York on St. Patrick’s Day are very difficult to ignore.",
+    "options": ["正确", "错误"],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "type": "judge",
+    "content": "Insulation is an essential element in the life of creative minds.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 12,
+    "type": "judge",
+    "content": "Every New Yorker enjoys the forlornness imparted by this city due to the excess of their spirit.",
+    "options": ["正确", "错误"],
+    "answer": 1
+  },
+  {
+    "id": 13,
+    "type": "judge",
+    "content": "New Yorkers may revive themselves with just a little expense.",
+    "options": ["正确", "错误"],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "type": "judge",
+    "content": "The loud, sad whistle of The Queen Mary is a symbol of departure as well as longing and loss.",
+    "options": ["正确", "错误"],
+    "answer": 0
+  }
+]

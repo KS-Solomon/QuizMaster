@@ -1,0 +1,11 @@
+
+[
+  {
+    "id": 11,
+    "type": "cloze",
+    "content": "The culture of New York City is shaped by centuries of immigration, the city’s size and variety, and its status as the cultural capital of the United States. Because of its 1)___ size and cultural influence, New York has been the 2)___ of many different, and often 3)___, portrayals in the mass media. From the sophisticated and 4)___ metropolis seen in many Woody Allen films, to the hellish and 5)___ urban jungle depicted in such movies as Martin Scorsese’s Taxi Driver, New York has served as the unwitting backdrop for virtually every conceivable viewpoint on big city life.\n\nIn the early years of film New York City was characterized as urbane and 6)___. By the city’s crisis period in the 1970s, however, films like Midnight Cowboy, The French Connection, Marathon Man, and Death Wish showed New York as full of chaos and 7)___. With the city’s renaissance in the 1980s and 1990s came new portrayals on television; Friends, Seinfeld, and Sex and the City showed life in the city to be 8)___ and interesting. Nonetheless a disproportionate number of 9)___ dramas, such as Law & Order, continue to make criminality in the city their subject, even as New York has become the 10)___ large city in the United States in the last two decades.",
+    "options": ["contradictory", "worldly", "sophisticated", "glamorous", "crime", "subject", "safest", "sheer", "chaotic", "violence"],
+    "answer": [7, 5, 0, 1, 8, 2, 9, 3, 4, 6],
+    "explanation": "1) sheer size 庞大的规模；2) the subject of ……的描绘对象；3) contradictory 相互矛盾的；4) worldly 繁华世故的；5) chaotic 混乱无序的；6) sophisticated 精致高雅的；7) violence 暴力；8) glamorous 光鲜迷人的；9) crime dramas 犯罪题材剧集；10) the safest 最安全的。"
+  }
+]

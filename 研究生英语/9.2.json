@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "type": "cloze",
+    "content": "Northern Canada, including the Northwest Territories, is an 1)___ place to live.\nHousing is at least 60% more expensive in the north 2)___ it is in southern Canada.\nFood prices are also 3)___, by at least 20%. Since building materials and foodstuffs are 4)___ from the south, the higher prices are primarily 5)___ transportation costs.\n6)___ far away from Yellowknife have higher costs, and communities served only by aircraft have the highest food and housing costs. For example, foodstuffs shipped by air to 7)___ communities such as Sachs Harbour on Banks Island are 80% more expensive than they are in Yellowknife. To offset these high food and housing costs, 8)___ are higher than those in southern Canada. In addition, most people live in public or staff housing, where rents are 9)___. Government employees living in remote communities receive an isolated post 10)___ payment to help offset the higher cost of living.",
+    "options": [
+      ["expensive", "admirable", "ideal", "unzoned"],
+      ["then", "as well as", "as much as", "than"],
+      ["reasonable", "higher", "dear", "unacceptable"],
+      ["wholesaled", "imported", "produced", "exported"],
+      ["constituted of", "resulting in", "due to", "raised by"],
+      ["Products", "Commuters", "Communities", "Houses"],
+      ["remote", "southern", "Yellowknife", "nearby"],
+      ["wages", "rents", "prices", "taxes"],
+      ["free", "high", "controlled", "subsidized"],
+      ["welfare", "subsidy", "dole", "allowance"]
+    ],
+    "answer": [0, 3, 1, 1, 2, 2, 0, 0, 3, 3],
+    "explanation": "1. expensive 昂贵的，对应北方生活成本高；2. more...than 比较级固定搭配；3. higher 价格更高；4. imported 从南部进口物资；5. due to 由于运输成本；6. Communities 偏远社区成本更高；7. remote 偏远村落；8. wages 薪资更高抵消高物价；9. subsidized 公租房租金有补贴；10. allowance 偏远岗位补贴。"
+  }
+]
