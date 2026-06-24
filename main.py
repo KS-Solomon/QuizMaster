@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 import json
 import os
 from pathlib import Path
@@ -14,9 +14,9 @@ DATA_DIR.mkdir(exist_ok=True)
 
 class Question(BaseModel):
     id: Optional[int] = None
-    type: str  # "single", "multiple", "judge", "fill"
+    type: str  # "single", "multiple", "judge", "fill", "cloze"
     content: str
-    options: Optional[List[str]] = None
+    options: Optional[Union[List[str], List[List[str]]]] = None
     answer: Any
     explanation: Optional[str] = None
 
