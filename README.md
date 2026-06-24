@@ -180,7 +180,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 |------|------|
 | ![题目](./images/image-20260622190913706.png) | ![答案](./images/image-20260622190923564.png) |
 
-**步骤 2** — 将截图发给 AI（ChatGPT / Claude 等），使用以下提示词：
+**步骤 2** — 将截图发给 AI（豆包 / ChatGPT / Claude 等），使用以下提示词：
 
 ![发给AI](./images/image-20260623151518977.png)
 
