@@ -317,7 +317,7 @@
         <div id="jumpGrid" class="grid grid-cols-5 gap-1.5"></div>
       </aside>
       <div class="flex-1 min-w-0 space-y-4 md:space-y-5">
-        <header class="card-glass rounded-2xl p-4 md:p-5 animate-fade-in">
+        <header class="card-glass rounded-2xl p-4 md:p-5 animate-fade-in relative z-20">
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
@@ -477,6 +477,7 @@ function renderClozeOptions(q){
 try{
 const parts=q.content.split('___');
 const numBlanks=parts.length-1;
+const perBlank=q.options&&q.options.length>0&&Array.isArray(q.options[0]);
 const container=document.createElement('div');
 container.className='space-y-4';
 if(state.isSubmitted){const prev=state.answered.get(state.currentIndex);if(prev&&prev.answer)state.blankAnswers={...prev.answer}}
@@ -487,10 +488,15 @@ passageDiv.appendChild(document.createTextNode(parts[i]));
 if(i<numBlanks){
 var blank=document.createElement('span');
 var ans=state.blankAnswers[i];
-if(ans!==undefined&&q.options&&q.options[ans]){
-blank.textContent=String.fromCharCode(65+ans)+'. '+q.options[ans];
+var optText=null;
+if(ans!==undefined&&q.options){
+if(perBlank){optText=q.options[i]&&q.options[i][ans]||null}
+else{optText=q.options[ans]||null}
+}
+if(optText){
+blank.textContent=String.fromCharCode(65+ans)+'. '+optText;
 if(state.isSubmitted){blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 rounded text-center text-sm '+(q.answer&&q.answer[i]===ans?'bg-emerald-500/20 text-emerald-300 border border-emerald-400':'bg-rose-500/20 text-rose-300 border border-rose-400')}
-else{blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 rounded text-center text-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400'}
+else{blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 rounded text-center text-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400 cursor-pointer transition hover:ring-1 hover:ring-rose-400/50';blank.setAttribute('data-blank',i);blank.onclick=(function(idx){return function(){delete state.blankAnswers[idx];state.selectedBlank=null;renderOptions(q)}})(i)}
 }else{
 blank.textContent=i+1;
 blank.className='inline-block min-w-20 mx-1 px-2 py-0.5 border-b-2 border-dashed rounded text-center text-sm border-white/20 text-slate-500 transition';
@@ -501,34 +507,44 @@ passageDiv.appendChild(blank);
 }
 }
 container.appendChild(passageDiv);
-if(q.options&&q.options.length){
+
+if(state.isSubmitted&&perBlank){}else if(perBlank&&state.selectedBlank===null){
+var hint=document.createElement('p');
+hint.className='text-sm text-slate-500 py-2';
+hint.textContent='\u70b9\u51fb\u4e0a\u65b9\u7a7a\u683c\u9009\u62e9\u8981\u586b\u7684\u7a7a';
+container.appendChild(hint);
+}else{
+var optionList=perBlank?q.options[state.selectedBlank]:q.options;
+if(optionList&&optionList.length){
 var optsDiv=document.createElement('div');
 optsDiv.className='flex flex-wrap gap-2 pt-4 border-t border-white/10';
-for(var j=0;j<q.options.length;j++){
+for(var j=0;j<optionList.length;j++){
 var btn=document.createElement('button');
 btn.className='px-3 py-1.5 rounded-lg text-sm font-medium transition border';
 var used=null;
-for(var k in state.blankAnswers){if(state.blankAnswers[k]===j){used=parseInt(k);break}}
-btn.textContent=used!==null?String.fromCharCode(65+j)+'. '+q.options[j]+' → '+(used+1):String.fromCharCode(65+j)+'. '+q.options[j];
+if(perBlank){used=state.blankAnswers[state.selectedBlank]===j?state.selectedBlank:null}
+else{for(var k in state.blankAnswers){if(state.blankAnswers[k]===j){used=parseInt(k);break}}}
+btn.textContent=used!==null?String.fromCharCode(65+j)+'. '+optionList[j]+' \u2192 '+(used+1):String.fromCharCode(65+j)+'. '+optionList[j];
 if(state.isSubmitted){
 if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200 opacity-60'}
-else{btn.className+=' bg-white/5 border-white/10 text-slate-300';if(q.answer&&q.answer.indexOf(j)>=0)btn.className+=' border-emerald-400 text-emerald-300'}
+else{btn.className+=' bg-white/5 border-white/10 text-slate-300'}
 btn.disabled=true;
 }else{
 if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200'}
 else{btn.className+=' bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-indigo-400'}
-btn.onclick=(function(idx,isUsed){return function(){if(isUsed!==null){delete state.blankAnswers[isUsed]}else if(state.selectedBlank!==null){for(var k2 in state.blankAnswers){if(state.blankAnswers[k2]===idx)delete state.blankAnswers[k2]}state.blankAnswers[state.selectedBlank]=idx;state.selectedBlank=null}renderOptions(q)}})(j,used);
+btn.onclick=(function(idx,isUsed){return function(){if(isUsed!==null){delete state.blankAnswers[isUsed]}else if(state.selectedBlank!==null){if(!perBlank){for(var k2 in state.blankAnswers){if(state.blankAnswers[k2]===idx)delete state.blankAnswers[k2]}}state.blankAnswers[state.selectedBlank]=idx;state.selectedBlank=null}renderOptions(q)}})(j,used);
 }
 optsDiv.appendChild(btn);
 }
 container.appendChild(optsDiv);
 }
+}
 els.optionsArea.appendChild(container);
-}catch(e){console.error(e);els.optionsArea.innerHTML='<p class="text-rose-400 text-sm p-4">渲染失败: '+e.message+'</p>'}
+}catch(e){console.error(e);els.optionsArea.innerHTML='<p class="text-rose-400 text-sm p-4">\u6e32\u67d3\u5931\u8d25: '+e.message+'</p>'}
 }
 function checkAnswer(q,a){if(q.type==='fill'){const ca=Array.isArray(q.answer)?q.answer:[q.answer];return ca.some(c=>String(c).toLowerCase().trim()===String(a).toLowerCase().trim())}else if(q.type==='cloze'){if(!q.answer||!Array.isArray(q.answer))return false;const blankCount=q.content.split('___').length-1;if(Object.keys(a).length!==blankCount)return false;for(let i=0;i<blankCount;i++){if(a[i]!==q.answer[i])return false}return true}else if(q.type==='multiple'){if(!Array.isArray(a)||a.length!==q.answer.length)return false;return a.every((v,i)=>v===q.answer[i])}else{return a===q.answer}}
-function showResult(q,c){els.resultArea.classList.remove('hidden');els.resultArea.className='mb-5 p-4 rounded-xl border animate-slide-up '+(c?'bg-emerald-500/10 border-emerald-500/30':'bg-rose-500/10 border-rose-500/30');const ic=c?'<svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>':'<svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';let h='<div class="flex items-start gap-2.5">'+ic+'<div><p class="font-semibold '+(c?'text-emerald-400':'text-rose-400')+'">'+(c?'回答正确！':'回答错误')+'</p>';if(q.type==='cloze'&&!c&&q.options){h+='<div class="mt-2 text-sm text-slate-400">正确答案：';q.answer.forEach((ai,i)=>{if(q.options[ai])h+=String.fromCharCode(65+ai)+'.'+q.options[ai]+' '});h+='</div>'}if(q.explanation)h+='<p class="mt-1.5 text-sm text-slate-400 leading-relaxed">解析：'+q.explanation+'</p>';h+='</div></div>';els.resultArea.innerHTML=h;const ci=Array.isArray(q.answer)?q.answer:[q.answer];if(!c&&q.type!=='fill'&&q.type!=='cloze'){ci.forEach(i=>{const e=document.getElementById('o_'+i);if(e){e.classList.remove('selected','wrong');e.classList.add('correct')}})}if(state.answered.has(state.currentIndex)){const a=state.answered.get(state.currentIndex);const ua=a.answer;if(q.type!=='fill'&&q.type!=='judge'&&q.type!=='cloze'){if(Array.isArray(ua)){ua.forEach(i=>{const e=document.getElementById('o_'+i);if(e&&!ci.includes(i))e.classList.add('wrong')})}else if(!a.correct){const e=document.getElementById('o_'+ua);if(e&&!ci.includes(ua))e.classList.add('wrong')}}}}
-function openEditModal(){state.isEditMode=true;const q=state.questions[state.currentIndex];state.editingQuestionId=q.id;els.modalTitle.textContent='编辑题目';els.targetLibrary.value=state.currentLibrary||'';els.questionType.value=q.type;document.getElementById('questionContentInput').value=q.content;els.optionsInput.value=q.options?q.options.join('\\n'):'';updateAnswerOptions();updateSelectedLibraryText();if(q.type==='cloze'){els.answerCloze.value=Array.isArray(q.answer)?q.answer.map(i=>String.fromCharCode(65+i)).join(' '):''}else if(q.type==='multiple'){updateMultipleAnswerOptions();els.answerMultiple.querySelectorAll('input[type="checkbox"]').forEach(cb=>{if(q.answer.includes(parseInt(cb.value)))cb.checked=true})}else if(q.type==='fill'){els.answerFill.value=Array.isArray(q.answer)?q.answer.join(', '):q.answer}else{els.answerSingle.value=q.answer}document.getElementById('explanationInput').value=q.explanation||'';els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden');els.modalOverlay.classList.remove('hidden')}
+function showResult(q,c){els.resultArea.classList.remove('hidden');els.resultArea.className='mb-5 p-4 rounded-xl border animate-slide-up '+(c?'bg-emerald-500/10 border-emerald-500/30':'bg-rose-500/10 border-rose-500/30');const ic=c?'<svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>':'<svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';let h='<div class="flex items-start gap-2.5">'+ic+'<div><p class="font-semibold '+(c?'text-emerald-400':'text-rose-400')+'">'+(c?'回答正确！':'回答错误')+'</p>';if(q.type==='cloze'&&!c&&q.options){h+='<div class="mt-2 text-sm text-slate-400">正确答案：';const pb2=Array.isArray(q.options[0]);q.answer.forEach((ai,i)=>{const o=pb2?q.options[i]&&q.options[i][ai]:q.options[ai];if(o)h+=String.fromCharCode(65+ai)+'.'+o+' '});h+='</div>'}if(q.explanation)h+='<p class="mt-1.5 text-sm text-slate-400 leading-relaxed">解析：'+q.explanation+'</p>';h+='</div></div>';els.resultArea.innerHTML=h;const ci=Array.isArray(q.answer)?q.answer:[q.answer];if(!c&&q.type!=='fill'&&q.type!=='cloze'){ci.forEach(i=>{const e=document.getElementById('o_'+i);if(e){e.classList.remove('selected','wrong');e.classList.add('correct')}})}if(state.answered.has(state.currentIndex)){const a=state.answered.get(state.currentIndex);const ua=a.answer;if(q.type!=='fill'&&q.type!=='judge'&&q.type!=='cloze'){if(Array.isArray(ua)){ua.forEach(i=>{const e=document.getElementById('o_'+i);if(e&&!ci.includes(i))e.classList.add('wrong')})}else if(!a.correct){const e=document.getElementById('o_'+ua);if(e&&!ci.includes(ua))e.classList.add('wrong')}}}}
+function openEditModal(){state.isEditMode=true;const q=state.questions[state.currentIndex];state.editingQuestionId=q.id;els.modalTitle.textContent='编辑题目';els.targetLibrary.value=state.currentLibrary||'';els.questionType.value=q.type;document.getElementById('questionContentInput').value=q.content;els.optionsInput.value=q.options?(Array.isArray(q.options[0])?q.options.map(g=>g.join(', ')).join('\\n'):q.options.join('\\n')):'';updateAnswerOptions();updateSelectedLibraryText();if(q.type==='cloze'){els.answerCloze.value=Array.isArray(q.answer)?q.answer.map(i=>String.fromCharCode(65+i)).join(' '):''}else if(q.type==='multiple'){updateMultipleAnswerOptions();els.answerMultiple.querySelectorAll('input[type="checkbox"]').forEach(cb=>{if(q.answer.includes(parseInt(cb.value)))cb.checked=true})}else if(q.type==='fill'){els.answerFill.value=Array.isArray(q.answer)?q.answer.join(', '):q.answer}else{els.answerSingle.value=q.answer}document.getElementById('explanationInput').value=q.explanation||'';els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden');els.modalOverlay.classList.remove('hidden')}
 function openAddModal(){state.isEditMode=false;state.editingQuestionId=null;els.modalTitle.textContent='录入题目';els.questionType.value='single';document.getElementById('questionContentInput').value='';els.optionsInput.value='';els.answerFill.value='';els.answerCloze.value='';document.getElementById('explanationInput').value='';renderModalLibraries();updateAnswerOptions();els.tabManual.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabUpload.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formManual.classList.remove('hidden');els.formUpload.classList.add('hidden');els.modalOverlay.classList.remove('hidden')}
 function updateAnswerOptions(){const t=els.questionType.value;if(t==='fill'){els.optionsSection.classList.add('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.remove('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden')}else if(t==='cloze'){els.optionsSection.classList.remove('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.remove('hidden')}else if(t==='multiple'){els.optionsSection.classList.remove('hidden');els.answerSingle.classList.add('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.remove('hidden');els.answerCloze.classList.add('hidden');updateMultipleAnswerOptions()}else if(t==='judge'){els.optionsSection.classList.add('hidden');els.answerSingle.innerHTML='<option value="0">正确</option><option value="1">错误</option>';els.answerSingle.classList.remove('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden')}else{els.optionsSection.classList.remove('hidden');els.answerSingle.classList.remove('hidden');els.answerFill.classList.add('hidden');els.answerMultiple.classList.add('hidden');els.answerCloze.classList.add('hidden');const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerSingle.innerHTML=o.map((_,i)=>'<option value="'+i+'">'+String.fromCharCode(65+i)+'</option>').join('')}}
 function updateMultipleAnswerOptions(){const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerMultiple.innerHTML=o.map((x,i)=>'<label class="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition text-sm text-slate-300"><input type="checkbox" value="'+i+'" class="w-4 h-4 rounded text-indigo-500 focus:ring-indigo-500/40"><span>'+String.fromCharCode(65+i)+'. '+x+'</span></label>').join('')}
@@ -552,7 +568,7 @@ els.tabManual.addEventListener('click',()=>{els.tabManual.className='px-4 py-3 t
 els.tabUpload.addEventListener('click',()=>{els.tabUpload.className='px-4 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-400';els.tabManual.className='px-4 py-3 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent transition';els.formUpload.classList.remove('hidden');els.formManual.classList.add('hidden')});
 els.questionType.addEventListener('change',updateAnswerOptions);
 els.optionsInput.addEventListener('input',()=>{const o=els.optionsInput.value.split('\\n').filter(l=>l.trim());els.answerSingle.innerHTML=o.map((_,i)=>'<option value="'+i+'">'+String.fromCharCode(65+i)+'</option>').join('');if(els.questionType.value==='multiple')updateMultipleAnswerOptions()});
-els.saveQuestionBtn.addEventListener('click',async()=>{const t=els.questionType.value;const c=document.getElementById('questionContentInput').value.trim();if(!c){alert('请填写题目内容！');return}const q={type:t,content:c};if(t!=='fill')q.options=els.optionsInput.value.split('\\n').filter(l=>l.trim());if(t==='cloze'){const letters=els.answerCloze.value.trim().split(/\\s+/);q.answer=letters.map(l=>l.toUpperCase().charCodeAt(0)-65)}else if(t==='multiple')q.answer=Array.from(els.answerMultiple.querySelectorAll('input:checked')).map(i=>parseInt(i.value));else if(t==='fill'){const a=els.answerFill.value;q.answer=a.includes(',')?a.split(',').map(s=>s.trim()):a}else q.answer=parseInt(els.answerSingle.value);const e=document.getElementById('explanationInput').value.trim();if(e)q.explanation=e;if(state.isEditMode){await updateQuestion(state.currentLibrary,state.editingQuestionId,q);if(state.selectedLibraries.size>0)await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode);else if(state.currentLibrary)await fetchLibrary(state.currentLibrary)}else{const lb=els.targetLibrary.value;await addQuestion(lb,q);if(state.selectedLibraries.has(lb))await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode)}els.modalOverlay.classList.add('hidden')});
+els.saveQuestionBtn.addEventListener('click',async()=>{const t=els.questionType.value;const c=document.getElementById('questionContentInput').value.trim();if(!c){alert('请填写题目内容！');return}const q={type:t,content:c};if(t!=='fill'){const rawLines=els.optionsInput.value.split('\\n').filter(l=>l.trim());if(t==='cloze'&&rawLines.length>0&&rawLines.every(l=>l.includes(','))){q.options=rawLines.map(l=>l.split(',').map(s=>s.trim()).filter(s=>s))}else{q.options=rawLines}}if(t==='cloze'){const letters=els.answerCloze.value.trim().split(/\\s+/);q.answer=letters.map(l=>l.toUpperCase().charCodeAt(0)-65)}else if(t==='multiple')q.answer=Array.from(els.answerMultiple.querySelectorAll('input:checked')).map(i=>parseInt(i.value));else if(t==='fill'){const a=els.answerFill.value;q.answer=a.includes(',')?a.split(',').map(s=>s.trim()):a}else q.answer=parseInt(els.answerSingle.value);const e=document.getElementById('explanationInput').value.trim();if(e)q.explanation=e;if(state.isEditMode){await updateQuestion(state.currentLibrary,state.editingQuestionId,q);if(state.selectedLibraries.size>0)await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode);else if(state.currentLibrary)await fetchLibrary(state.currentLibrary)}else{const lb=els.targetLibrary.value;await addQuestion(lb,q);if(state.selectedLibraries.has(lb))await fetchMultipleLibraries(Array.from(state.selectedLibraries),state.quizMode)}els.modalOverlay.classList.add('hidden')});
 els.uploadDropzone.addEventListener('dragover',e=>{e.preventDefault();els.uploadDropzone.classList.add('border-indigo-400','bg-indigo-500/10')});
 els.uploadDropzone.addEventListener('dragleave',e=>{e.preventDefault();els.uploadDropzone.classList.remove('border-indigo-400','bg-indigo-500/10')});
 els.uploadDropzone.addEventListener('drop',e=>{e.preventDefault();els.uploadDropzone.classList.remove('border-indigo-400','bg-indigo-500/10')});
