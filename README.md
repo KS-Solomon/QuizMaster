@@ -114,7 +114,9 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 }
 ```
 
-### 完形填空（cloze）
+### 完形填空（cloze）— 共享选项池
+
+所有空格从同一个选项池中选词：
 
 ```json
 {
@@ -127,7 +129,25 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 }
 ```
 
-> ⚠️ 完形填空中用 `___`（三个下划线）标记挖空位置，`answer` 为整数数组，`answer[i]` 表示第 `i` 个空对应的选项索引（A=0, B=1, ...）。
+### 完形填空（cloze）— 每题独立选项
+
+每个空格拥有自己的一组 ABCD 选项（对应传统完形填空）：
+
+```json
+{
+  "id": 6,
+  "type": "cloze",
+  "content": "It is 1)___ place to live. Housing is 2)___ expensive.",
+  "options": [
+    ["expensive", "admirable", "ideal", "unzoned"],
+    ["more", "less", "as", "than"]
+  ],
+  "answer": [0, 1],
+  "explanation": "空格1: A; 空格2: B。"
+}
+```
+
+> ⚠️ **自动识别**：系统根据 `options` 是字符串数组还是二维数组自动切换渲染模式。`answer` 格式始终为整数数组，`answer[i]` 表示第 `i` 个空在其对应选项组中的索引（A=0, B=1, ...）。
 
 ### 题型速查
 
@@ -137,7 +157,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 | 多选 | `multiple` | 数字数组 | `[0, 2]` |
 | 判断 | `judge` | `0`（正确）或 `1`（错误） | `1` |
 | 填空 | `fill` | 字符串或字符串数组 | `"200"` 或 `["200", "200 OK"]` |
-| 完形填空 | `cloze` | 数字数组（按空顺序） | `[2, 0, 1]` |
+| 完形填空 | `cloze` | 数字数组（按空顺序） | `[2, 0, 1]`（共享选项）或 `[0, 1]`（独立选项） |
 
 ## 如何批量制作题库
 
@@ -171,7 +191,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 - 多选题 type="multiple"，answer 为选项索引数组
 - 判断题 type="judge"，answer 为 0（正确）或 1（错误）
 - 填空题 type="fill"，answer 为字符串或字符串数组
-- 完形填空 type="cloze"，题干用 ___ 标记挖空，answer 为每个空对应选项的索引数组
+- 完形填空 type="cloze"，支持两种格式：① 共享选项池（options 为字符串数组）② 每题独立选项（options 为二维数组）。题干用 ___ 标记挖空，answer 为每个空对应选项的索引数组
 
 模板示例：
 ```json
@@ -210,9 +230,17 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
   {
     "id": 5,
     "type": "cloze",
-    "content": "题干中用 ___ 标记挖空位置，每个空对应一个选项。如：It is ___ by people. It can ___ doors.",
+    "content": "题干中用 ___ 标记挖空位置，所有空共享选项池。如：It is ___ by people. It can ___ doors.",
     "options": ["spoken", "open", "practice"],
     "answer": [0, 1],
+    "explanation": "解析（可选）"
+  },
+  {
+    "id": 6,
+    "type": "cloze",
+    "content": "题干中用 ___ 标记挖空位置，每个空有自己的一组选项。如：It is 1)___ place. Housing is 2)___ expensive.",
+    "options": [["expensive", "admirable", "ideal"], ["more", "less", "as"]],
+    "answer": [0, 0],
     "explanation": "解析（可选）"
   }
 ]

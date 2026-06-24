@@ -111,5 +111,19 @@
       6
     ],
     "explanation": "1) sheer size 庞大的规模；2) the subject of ……的描绘对象；3) contradictory 相互矛盾的；4) worldly 繁华世故的；5) chaotic 混乱无序的；6) sophisticated 精致高雅的；7) violence 暴力；8) glamorous 光鲜迷人的；9) crime dramas 犯罪题材剧集；10) the safest 最安全的。"
+  },
+  {
+    "id": 8,
+    "type": "cloze",
+    "content": "Northern Canada is an 1)___ place to live. Housing is more expensive in the north 2)___ it is in the south. Food prices are also 3)___. Materials are 4)___ from the south, so higher prices are 5)___ transportation costs.",
+    "options": [
+      ["expensive", "admirable", "ideal", "unzoned"],
+      ["then", "as well as", "as much as", "than"],
+      ["reasonable", "higher", "dear", "unacceptable"],
+      ["wholesaled", "imported", "produced", "exported"],
+      ["due to", "resulting in", "constituted of", "raised by"]
+    ],
+    "answer": [0, 3, 1, 1, 0],
+    "explanation": "每题独立选项格式示例。1) expensive；2) more...than 比较级；3) higher 更高；4) imported 进口；5) due to 由于。"
   }
 ]
