@@ -15,7 +15,7 @@
       ["rational", "imaginable", "incredible", "possible"],
       ["little", "the estimated", "the same", "the ten times"]
     ],
-    "answer": [0, 1, 1, 3, 0, 1, 2, 0, 3, 2],
+    "answer": [0, 1, 1, 3, 0, 1, 2, 1, 3, 2],
     "explanation": "1. were to 用于虚拟语气，表达假设；2. inefficient brakes 制动性能差的刹车；3. paved with 路面铺设；4. obliged to 强制、不得不；5. evidence 证据表明；6. substantial decrease 运输效率大幅下降；7. potential safety benefit 潜在安全收益；8. considered as 被视作；9. possible 能够；10. the same risk 同等死亡风险，契合风险补偿理论。"
   }
 ]
