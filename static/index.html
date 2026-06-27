@@ -522,17 +522,19 @@ for(var j=0;j<optionList.length;j++){
 var btn=document.createElement('button');
 btn.className='px-3 py-1.5 rounded-lg text-sm font-medium transition border';
 var used=null;
-if(perBlank){used=state.blankAnswers[state.selectedBlank]===j?state.selectedBlank:null}
-else{for(var k in state.blankAnswers){if(state.blankAnswers[k]===j){used=parseInt(k);break}}}
-btn.textContent=used!==null?String.fromCharCode(65+j)+'. '+optionList[j]+' \u2192 '+(used+1):String.fromCharCode(65+j)+'. '+optionList[j];
+var usedBlanks=[];
+if(perBlank){if(state.blankAnswers[state.selectedBlank]===j)usedBlanks=[state.selectedBlank]}
+else{for(var k in state.blankAnswers){if(state.blankAnswers[k]===j)usedBlanks.push(parseInt(k))}}
+if(usedBlanks.length>0)used=usedBlanks;
+btn.textContent=used?String.fromCharCode(65+j)+'. '+optionList[j]+' \u2192 '+used.map(function(b){return b+1}).join(','):String.fromCharCode(65+j)+'. '+optionList[j];
 if(state.isSubmitted){
-if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200 opacity-60'}
-else{btn.className+=' bg-white/5 border-white/10 text-slate-300'}
+if(used){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200 opacity-60'}
+else{btn.className+=' bg-white/5 border-white/10 text-slate-300';if(q.answer&&q.answer.indexOf(j)>=0)btn.className+=' border-emerald-400 text-emerald-300'}
 btn.disabled=true;
 }else{
-if(used!==null){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200'}
+if(used){btn.className+=' bg-indigo-500/30 border-indigo-400 text-indigo-200'}
 else{btn.className+=' bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-indigo-400'}
-btn.onclick=(function(idx,isUsed){return function(){if(isUsed!==null){delete state.blankAnswers[isUsed]}else if(state.selectedBlank!==null){if(!perBlank){for(var k2 in state.blankAnswers){if(state.blankAnswers[k2]===idx)delete state.blankAnswers[k2]}}state.blankAnswers[state.selectedBlank]=idx;state.selectedBlank=null}renderOptions(q)}})(j,used);
+btn.onclick=(function(idx,blanks){return function(){if(blanks.length>0&&state.selectedBlank===null){for(var bi=0;bi<blanks.length;bi++)delete state.blankAnswers[blanks[bi]]}else if(state.selectedBlank!==null){state.blankAnswers[state.selectedBlank]=idx;state.selectedBlank=null}renderOptions(q)}})(j,usedBlanks);
 }
 optsDiv.appendChild(btn);
 }
